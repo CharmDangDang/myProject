@@ -87,6 +87,9 @@ public class Answer {
                 case "/환율":
                     getDebate(msgCheckArray[1],msgCheckArray[2]);
                     break;
+                case "/시세" :
+                    getMetal(tmsg[2],msgCheckArray[1]);
+                    break;
                 case "/단차":
                 case "/10연차":
                     fsaf(msgCheckArray[0]);
@@ -127,6 +130,11 @@ public class Answer {
         exchangeTask.execute();
     }
 
+    public void getMetal(String room,String msg) {
+        MetalExchangeTask metalExchangeTask = new MetalExchangeTask(room,msg);
+        metalExchangeTask.execute();
+    }
+
 
     public void Timer(String msg) {
 
@@ -157,6 +165,8 @@ public class Answer {
                 + "\n[/n일뒤]\n지금으로부터 n일 뒤의 날짜"
                 + "\n[/n일전]\n지금으로부터 n일 전의 날짜"
                 + "\n[/주제]\n랜덤한 토론 주제"
+                + "\n[/환율 나라이름 n]\n유로는 나라이름에 유로라고 적어주세요"
+                + "\n[/시세 TAG]\nTAG 종류 : 니켈,동,우라늄,철광석,원유,유연탄,리튬,갈륨"
                 + "\n[/사용법],[/안내],[/기능],[/도움말]"
                 + "\n\n\n\nMade by 두부조아 with 지대넓얕 톡방여러분";
     }
