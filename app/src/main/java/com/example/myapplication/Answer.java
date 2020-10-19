@@ -21,24 +21,30 @@ public class Answer {
         String[] msgCheckArray = {"", "", ""};
 
         if (tmsg[0].contains("/")) {
-            if (tmsg[0].contains("/뉴스")||tmsg[0].contains("환율")) {
+            if (tmsg[0].contains("/뉴스") || tmsg[0].contains("환율")) {
                 temp = tmsg[0].split("\\s", 3);
                 System.arraycopy(temp, 0, msgCheckArray, 0, temp.length);
-                tmsg[0]="";
+                tmsg[0] = "";
             } else if (tmsg[0].endsWith("뒤") || tmsg[0].endsWith("후")) {
                 temp = new String[]{"/일뒤", tmsg[0].replaceAll("[^0-9]", "").trim()};
                 System.arraycopy(temp, 0, msgCheckArray, 0, temp.length);
-                Log.d("시간후",msgCheckArray[0]+msgCheckArray[1]);
-                tmsg[0]="";
+                Log.d("시간후", msgCheckArray[0] + msgCheckArray[1]);
+                tmsg[0] = "";
             } else if (tmsg[0].endsWith("전")) {
                 msgCheckArray = new String[]{"/일전", tmsg[0].replaceAll("[^0-9]", "").trim()};
-                tmsg[0]="";
+                tmsg[0] = "";
+
+
             } else {
                 temp = tmsg[0].split("\\s", 2);
                 System.arraycopy(temp, 0, msgCheckArray, 0, temp.length);
             }
+        } else if (tmsg[0].contains("안녕하세요")) {
+            temp = tmsg[0].split("\\s", 2);
+            System.arraycopy(temp, 0, msgCheckArray, 0, temp.length);
 
-            Log.d("시간후",msgCheckArray[0]+msgCheckArray[1]);
+            Log.d("시간후", msgCheckArray[0] + msgCheckArray[1]);
+        }
             switch (msgCheckArray[0]) {
                 case "/타이머":
                     if (msgCheckArray[1].equals("")) {
@@ -94,6 +100,9 @@ public class Answer {
                 case "/10연차":
                     fsaf(msgCheckArray[0]);
                     break;
+                case "안녕하세요" :
+                    Listener.send(tmsg[2],tmsg[1]+"님 어서오세요");
+                    break;
                 case "/일뒤":
                 case "/일전":
                     Log.d("실행전","어딨니");
@@ -112,7 +121,7 @@ public class Answer {
                     break;
             }
         }
-    }
+    
 
     public void getCOVID() {
         COVIDTask getCOVIDtask = new COVIDTask(tmsg[2]);

@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
-import android.text.Html;
-import android.text.SpannableString;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -17,7 +15,7 @@ import java.util.Arrays;
 
 
 public class Listener extends NotificationListenerService {
-    static Context context;
+    static Context context; //
     private static final String KAKAOTALK_PACKAGE = "com.kakao.talk";
     private static ArrayList<Session> sessions = new ArrayList<>();
 
@@ -32,9 +30,7 @@ public class Listener extends NotificationListenerService {
             Notification.WearableExtender wearableExtender = new Notification.WearableExtender(sbn.getNotification());
             for (Notification.Action act : wearableExtender.getActions()) {
                 if (act.getRemoteInputs() != null && act.getRemoteInputs().length > 0) {
-                    String title = sbn.getNotification().extras.getString("android.title");
-                    Object index = sbn.getNotification().extras.get("android.text");
-                    Type.Message message = parsingMessage(title, index);
+
                     context = getApplicationContext();
                     Session session = new Session();
                     session.session = act;
@@ -48,7 +44,7 @@ public class Listener extends NotificationListenerService {
                     Log.i("asd", "message : " + session.message + " sender : " + session.sender + " room : " + session.room + " session : " + session);
 
                     //여기 아래에 알림 내용에 따라 다른 send()를 호출하면 됨
-                    if (session.message.charAt(0) == '/') {
+                    if (session.message.charAt(0) == '/'||session.message.contains("안녕하세요")) {
                         String[] msg = {session.message, session.sender, session.room};
                         Answer answer = new Answer(msg);
                         answer.trigger();
@@ -60,8 +56,9 @@ public class Listener extends NotificationListenerService {
                 stopSelf();
             }
         }
+
     }
-    //메세지를 보내는 함수, 원리는 원작자도 모름..
+
     //send(문자열); 로 작동함
     public static void send(String room ,String message) throws IllegalArgumentException {
         Notification.Action session = null;
@@ -99,23 +96,10 @@ public class Listener extends NotificationListenerService {
         return sessions;
     }
 
-    private Type.Message parsingMessage(String title, Object index) {
-        Type.Message result = new Type.Message();
-        result.room = title;
 
-        if (index instanceof String) {
-            result.sender = title;
-            result.message = (String) index;
-        } else {
-            String html = Html.toHtml((SpannableString) index);
-            result.sender = Html.fromHtml(html.split("<b>")[1].split("</b>")[0]).toString();
-            result.message = Html.fromHtml(html.split("</b>")[1].split("</p>")[0].substring(1)).toString();
-        }
+}
 
-        return result;
-    }
-
-    /*public static void send(String room, String message) throws IllegalArgumentException { // @author ManDongI
+    /*public static void send(String room, String message) throws IllegalArgumentException {
         Notification.Action session = null;
 
         for(Session i : sessions) {
@@ -141,4 +125,25 @@ public class Listener extends NotificationListenerService {
             e.printStackTrace();
         }
     }*/
-}
+
+
+/* String title = sbn.getNotification().extras.getString("android.title");
+                    Object index = sbn.getNotification().extras.get("android.text");
+                    Type.Message message = parsingMessage(title, index);
+
+    private Type.Message parsingMessage(String title, Object index) {
+        Type.Message result = new Type.Message();
+        result.room = title;
+
+        if (index instanceof String) {
+            result.sender = title;
+            result.message = (String) index;
+        } else {
+            String html = Html.toHtml((SpannableString) index);
+            result.sender = Html.fromHtml(html.split("<b>")[1].split("</b>")[0]).toString();
+            result.message = Html.fromHtml(html.split("</b>")[1].split("</p>")[0].substring(1)).toString();
+        }
+
+        return result;
+    }
+*/
