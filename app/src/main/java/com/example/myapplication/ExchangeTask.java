@@ -30,7 +30,10 @@ public class ExchangeTask extends AsyncTask<Void, Void, Double> {
 
     @Override
     protected Double doInBackground(Void... voids) {
+        int a = 2, b , c;
+        int max, min;
 
+        max = (a>b)? a : (b>c)? b: c;
         String strJson = null;
         double exchange = 0;
         try {

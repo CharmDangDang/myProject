@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         sender = findViewById(R.id.sender);
         room = findViewById(R.id.room);
         context = this;
+
         if (!permissionGrantred()) {
             Intent intent = new Intent(
                     "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");

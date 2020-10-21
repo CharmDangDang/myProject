@@ -21,7 +21,7 @@ public class MetalExchangeTask extends AsyncTask<Void, Void, Double> {
     DecimalFormat decimalFormat = new DecimalFormat("###,###.##");
     double troyRate = 32.1507;
     double donRate = 0.1205653;
-    int usdRate = 1146;
+    int usdRate = 1133;
     HashMap<String,String> metals = new HashMap<>();
     String MetalUrl = "https://www.kores.net/komis/price/mineralprice/basemetals/pricetrend/baseMetals.do?mnrl_pc_mc_seq=";
 
@@ -151,7 +151,7 @@ public class MetalExchangeTask extends AsyncTask<Void, Void, Double> {
             Listener.send(room, "1kg 당 " + decimalFormat.format(s * usdRate) + "원");
         } else if (msg.equals("금") || msg.equals("은")) {
             Listener.send(room, "한 돈 당 " + decimalFormat.format(s / 31.1033 * usdRate * 3.75) + "원");
-        } else if (msg.equals("")) {
+        } else if (num.equals("")) {
             Listener.send(room, msg + "은(는) 전설의 광물.");
         } else {
             Listener.send(room, "1kg 당 " + decimalFormat.format(s / 1000 * usdRate) + "원");

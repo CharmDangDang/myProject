@@ -45,8 +45,8 @@ public class Listener extends NotificationListenerService {
 
                     //여기 아래에 알림 내용에 따라 다른 send()를 호출하면 됨
                     if (session.message.charAt(0) == COMMANDREQUIRECHAR) {
-                        String[] msg = {session.message, session.sender, session.room};
-                        Answer answer = new Answer(msg);
+                        String[] sessioninfo = {session.message.substring(1), session.sender, session.room};
+                        Answer answer = new Answer(context,sessioninfo);
                         answer.trigger();
                     }
 
@@ -59,7 +59,6 @@ public class Listener extends NotificationListenerService {
 
     }
 
-    //send(문자열); 로 작동함
     public static void send(String room ,String message) throws IllegalArgumentException {
         Notification.Action session = null;
 
