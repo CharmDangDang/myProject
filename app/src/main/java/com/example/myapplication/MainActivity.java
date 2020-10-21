@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -12,6 +14,8 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
 
     TextView message , sender , room ;
+    SharedPreferences sharedPref;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         message = findViewById(R.id.myMessage);
         sender = findViewById(R.id.sender);
         room = findViewById(R.id.room);
-
+        context = this;
         if (!permissionGrantred()) {
             Intent intent = new Intent(
                     "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
@@ -35,6 +39,5 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     }
-
 
 }

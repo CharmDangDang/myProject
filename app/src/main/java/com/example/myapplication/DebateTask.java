@@ -39,6 +39,11 @@ public class DebateTask extends AsyncTask<Void, Void, ArrayList<String>> {
     protected void onPostExecute(ArrayList<String> result) {
         super.onPostExecute(result);
 
+        if(result.get(new Random().nextInt((result.size()))).equals("")){
+            Listener.send(room,"사이트가 고장났습니다. 두부조아에게 화를 내세용");
+        } else {
         Listener.send(room,"랜덤 주제 : "+ result.get(new Random().nextInt((result.size())))+"에 관하여");
+
+        }
     }
 }

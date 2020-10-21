@@ -18,7 +18,7 @@ public class Listener extends NotificationListenerService {
     static Context context; //
     private static final String KAKAOTALK_PACKAGE = "com.kakao.talk";
     private static ArrayList<Session> sessions = new ArrayList<>();
-
+    private final static char COMMANDREQUIRECHAR = '/';
 
     private Type.Message mMessage;
 
@@ -44,7 +44,7 @@ public class Listener extends NotificationListenerService {
                     Log.i("asd", "message : " + session.message + " sender : " + session.sender + " room : " + session.room + " session : " + session);
 
                     //여기 아래에 알림 내용에 따라 다른 send()를 호출하면 됨
-                    if (session.message.charAt(0) == '/'||session.message.contains("안녕하세요")) {
+                    if (session.message.charAt(0) == COMMANDREQUIRECHAR) {
                         String[] msg = {session.message, session.sender, session.room};
                         Answer answer = new Answer(msg);
                         answer.trigger();

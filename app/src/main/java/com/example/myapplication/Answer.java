@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
@@ -9,6 +10,10 @@ import java.util.Random;
 
 public class Answer {
     String[] tmsg;
+    SharedPreferences sharedPref;
+
+    private static final int NEWARRAYCNT = 3;
+
 
     public Answer(String[] tmsg) {
         this.tmsg = tmsg;
@@ -22,7 +27,7 @@ public class Answer {
 
         if (tmsg[0].contains("/")) {
             if (tmsg[0].contains("/뉴스") || tmsg[0].contains("환율")) {
-                temp = tmsg[0].split("\\s", 3);
+                temp = tmsg[0].split("\\s", NEWARRAYCNT);
                 System.arraycopy(temp, 0, msgCheckArray, 0, temp.length);
                 tmsg[0] = "";
             } else if (tmsg[0].endsWith("뒤") || tmsg[0].endsWith("후")) {
@@ -33,8 +38,6 @@ public class Answer {
             } else if (tmsg[0].endsWith("전")) {
                 msgCheckArray = new String[]{"/일전", tmsg[0].replaceAll("[^0-9]", "").trim()};
                 tmsg[0] = "";
-
-
             } else {
                 temp = tmsg[0].split("\\s", 2);
                 System.arraycopy(temp, 0, msgCheckArray, 0, temp.length);
@@ -44,6 +47,9 @@ public class Answer {
             System.arraycopy(temp, 0, msgCheckArray, 0, temp.length);
 
             Log.d("시간후", msgCheckArray[0] + msgCheckArray[1]);
+        } else if (tmsg[0].contains("이만")) {
+            temp = tmsg[0].split("\\s", 2);
+            System.arraycopy(temp, 0, msgCheckArray, 0, temp.length);
         }
             switch (msgCheckArray[0]) {
                 case "/타이머":
@@ -117,6 +123,10 @@ public class Answer {
                     DebateTask debateTask = new DebateTask(tmsg[2]);
                     debateTask.execute();
                     break;
+                case "/애도" :
+                    Listener.send(tmsg[2],"X를 눌러 Joy를 표하십시오");
+                    break;
+
                 default:
                     break;
             }
@@ -288,5 +298,6 @@ public class Answer {
         }
 
     }
+
 }
 

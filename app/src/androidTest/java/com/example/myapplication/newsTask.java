@@ -6,7 +6,6 @@ import android.util.Log;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -20,8 +19,9 @@ public class newsTask extends AsyncTask<Void, Void, ArrayList<NewsData>> {
     String tag;
     String mTag;
     String date;
-    String mainTitle = "a > span.tb > strong";
-    String mainLink = "a";
+    String qChild = "div:nth-child(";
+    String mainTitle = ") > div > a > span.tb > strong";
+    String mainLink = ") > div > a";
     boolean isSports = false;
     boolean rank = false;
     String[] tags = {"시사", "경제", "스포츠", "사회", "과학", "세계", "연예", "정치", "야구", "국내야구", "한국야구", "해외야구", "mlb", "축구", "한국축구", "국내축구", "해축", "해외축구", "배구", "농구"};
@@ -57,23 +57,27 @@ public class newsTask extends AsyncTask<Void, Void, ArrayList<NewsData>> {
             date = getDate();
             Document document;
             Elements elements;
-            //#newsContents > div > div.postRankSubjectList.f_clear > div:nth-child(1) > div > a
-            //#cntArea > ul.mduTitcnt > li:nth-child(1) > a
             if (isSports) {
                 document = Jsoup.connect("https://sports.news.nate.com/" + tag + "/recent").get();
-                elements = document.select("#cntArea > ul.mduTitcnt > li");
-                mainTitle = "a > span.tb > strong";
-                putData(elements);
+                elements = document.select("#cntArea > ul.mduTitcnt");
+                qChild = "li:nth-child(";
+                mainTitle = ") > a > span.tb > strong";
+                mainLink = ") > a";
+                putData(elements, 21);
             } else {
                 document = Jsoup.connect("https://news.nate.com/rank/interest?sc=" + tag + "&p=day&date=" + date).get();
-                elements = document.select("#newsContents > div > div.postRankSubjectList.f_clear > div");
-                putData(elements);
-                elements = document.select("#postRankSubject > ul > li");
-                mainTitle = mainLink;
-                putData(elements);
+                elements = document.select("#newsContents > div > div.postRankSubjectList.f_clear");
+                putData(elements, 6);
+                Elements subElements = document.select("#postRankSubject");
+                for (int i = 1; i < 6; i++) {
+                    for (int j = 1; j < 6; j++) {
+                        NewsData data = new NewsData();
+                        data.setNewsLink("https:" + subElements.select("#postRankSubject > ul:nth-child(" + i + ") > li:nth-child(" + j + ") > a").attr("href"));
+                        newsDataArrayList.add(data);
+
+                    }
+                }
             }
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -92,9 +96,6 @@ public class newsTask extends AsyncTask<Void, Void, ArrayList<NewsData>> {
         } else {
             int i = arrayList.size();
             Random random = new Random();
-            for (int j = 0; j < 5 ; j++) {
-            Log.d("어레이 확인"+i+"번째링크",arrayList.get(j).getNewsLink()+"\n");
-            }
             Listener.send(room, mTag + "뉴스중 랜덤 링크" + Answer.crossLine + arrayList.get(random.nextInt(i)).getNewsLink());
         }
     }
@@ -165,18 +166,18 @@ public class newsTask extends AsyncTask<Void, Void, ArrayList<NewsData>> {
         return cnt > 0;
     }
 
-    public void putData(Elements elements) {
-        for (Element element : elements) {
+    public void putData(Elements elements, int max) {
+        for (int i = 1; i < max; i++) {
             NewsData data = new NewsData();
-            if (element != null) {
-                data.setNewsTitle(element.select(mainTitle).text());
-                data.setNewsLink("https:" + element.select(mainLink).attr("href"));
-                newsDataArrayList.add(data);
-            }
-
-
+            data.setNewsTitle(elements.select(qChild + i + mainTitle).text());
+            data.setNewsLink("https:" + elements.select(qChild + i + mainLink).attr("href"));
+            newsDataArrayList.add(data);
+            Log.d("뉴스데이터", elements.select(qChild + i + mainTitle).text());
+            Log.d("뉴스 링크", elements.select(qChild + i + mainLink).attr("href"));
         }
+
     }
+
 }
 
 /*  String qChild = "div:nth-child(";
